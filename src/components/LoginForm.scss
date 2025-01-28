@@ -1,0 +1,13 @@
+.login-form {
+	display: flex;
+	flex-direction: column;
+
+	.login-form__input {
+		margin-top: 24px;
+	}
+
+	.login-form__btn {
+		margin-top: 24px;
+		padding: 12px 24px;
+	}
+}
