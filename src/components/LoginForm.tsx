@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from "react-redux";
 import './LoginForm.scss'
 import { TextField, Button } from '@mui/material';
-import { authService } from "../services/authService";
 import { alertStatusType } from '../types';
 import AlertMessage from './AlertMessage';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from "../store/slices/authSlice";
+import { RootState, useAppDispatch } from "../store/store";
 
-const STATUS: Record<string, alertStatusType> = {
+const ALERT_STATUS: Record<string, alertStatusType> = {
  success: {
 	severity: 'success',
 	message: 'Login Successful!'
@@ -18,31 +20,35 @@ const STATUS: Record<string, alertStatusType> = {
 }
 
 const LoginForm: React.FC = () => {
+	const dispatch = useAppDispatch();
+
 	const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-	const [isSentRequest, setIsSentRequest] = useState<boolean>(false);
-	const [loginStatus, setLoginStatus] = useState<alertStatusType>({severity: 'error', message: ''});
+  const [isSentRequest, setIsSentRequest] = useState<boolean>(false);
+	const [alertStatus, setAlertStatus] = useState<alertStatusType>({severity: 'error', message: ''});
+  const loginStatus = useSelector((state: RootState) => state.auth.status);
 	const navigate = useNavigate();
-
-	const showAlertMessage = ({severity, message}: alertStatusType) => {
-		return <AlertMessage {...{severity, message}}/>;
-	}
 
 	const processLogin = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setIsSentRequest(true);
-
-		const success = authService.login({username, password});
-		if (!success) {
-			authService.setCurrentUser({username, password});
-			setLoginStatus(STATUS.invalid);
-		}
-
-		setLoginStatus(STATUS.success);
-		setTimeout(()=>{
-			navigate('/');
-		}, 2000);
+    dispatch(loginUser({ username, password}));
+    setIsSentRequest(true);
 	}
+
+  useEffect(() => {  
+    if (loginStatus === "failed") {
+      setAlertStatus(ALERT_STATUS.invalid);
+      setIsSentRequest(false);
+      return;
+    }
+  
+    if (loginStatus === 'idle') {
+      setAlertStatus(ALERT_STATUS.success);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    }
+  }, [loginStatus, navigate]);
 
 	return (
 		<form className='login-form' onSubmit={processLogin}>
@@ -59,13 +65,14 @@ const LoginForm: React.FC = () => {
 				onChange={(e) => setPassword(e.target.value)}
         type="password"
 				required/>
+      {["idle", "failed"].includes(loginStatus) ? <AlertMessage {...alertStatus}/> : ''}
 			<Button
+        disabled={isSentRequest}
 				variant="outlined"
 				type="submit"
 				className='login-form__btn'>
 				Login
 			</Button>
-			{isSentRequest ? showAlertMessage(loginStatus) : ''}
 		</form>
 	);
 }

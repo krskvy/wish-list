@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from "react-redux";
 import './RegisterForm.scss'
 import { TextField, Button } from '@mui/material';
-import { authService } from "../services/authService";
 import AlertMessage from './AlertMessage';
 import { alertStatusType } from '../types';
 import { useNavigate } from 'react-router-dom';
+import { registerUser, logoutUser } from "../store/slices/authSlice";
+import { RootState, useAppDispatch } from "../store/store";
+import { v4 as uuidv4 } from 'uuid';
 
 
-const STATUS: Record<string, alertStatusType> = {
- passwordDoNotMatch: {
+const ALERT_STATUS: Record<string, alertStatusType> = {
+ passwordsDoNotMatch: {
 	severity: 'error',
 	message: 'Passwords do not match'
  },
@@ -23,43 +26,54 @@ const STATUS: Record<string, alertStatusType> = {
 }
 
 const RegisterForm: React.FC = () => {
+	const dispatch = useAppDispatch();
+	
 	const [username, setUsername] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [repeatPassword, setRepeatPassword] = useState<string>('');
 	const [isSentRequest, setIsSentRequest] = useState<boolean>(false);
-	const [registerStatus, setRegisterStatus] = useState<alertStatusType>({severity: 'error', message: ''});
+  const [isShowAlert, setIsShowAlert] = useState<boolean>(false);
+	const [alertStatus, setAlertStatus] = useState<alertStatusType>({severity: 'error', message: ''});
 	const navigate = useNavigate();
+  const registrationStatus = useSelector((state: RootState) => state.auth.status);
 
 	const sanitizePswd = (password: string): string => {
 		return password.trim();
 	}
 
-	const showAlertMessage = ({severity, message}: alertStatusType) => {
-		return <AlertMessage {...{severity, message}}/>;
-	}
-
 	const processRegister = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
 		setIsSentRequest(true);
 
-		if (sanitizePswd(password) !== sanitizePswd(repeatPassword)) {
-			setRegisterStatus(STATUS.passwordDoNotMatch);
+    if (sanitizePswd(password) !== sanitizePswd(repeatPassword)) {
+			setAlertStatus(ALERT_STATUS.passwordsDoNotMatch);
+      setIsSentRequest(false);
+      setIsShowAlert(true);
 			return;
 		}
 
-		const success = authService.register({username, password: sanitizePswd(password)});
-		if (!success) {
-			setRegisterStatus(STATUS.invalid);
-			return;
-		}
-
-		setRegisterStatus(STATUS.success);
-		authService.setCurrentUser({username, password: sanitizePswd(password)});
-		setTimeout(()=>{
-			navigate('/');
-		}, 2000);
+    dispatch(registerUser({id: uuidv4(), username, password: sanitizePswd(password)}));
 	}
+
+  useEffect(() => {
+    console.log("Registration Status: ", registrationStatus);
+
+    if (registrationStatus === 'failed') {
+      setAlertStatus(ALERT_STATUS.invalid);
+      setIsSentRequest(false);
+      setIsShowAlert(true);
+      return;
+    }
+    
+    if (registrationStatus === 'registered') {
+      setAlertStatus(ALERT_STATUS.success);
+      setIsShowAlert(true);
+      setTimeout(()=>{
+        dispatch(logoutUser());
+        navigate('/');
+      }, 2000);
+    }
+  }, [registrationStatus, navigate, dispatch]);
 
 	return (
 		<form className='register-form' onSubmit={processRegister}>
@@ -83,10 +97,9 @@ const RegisterForm: React.FC = () => {
 				onChange={(e) => setRepeatPassword(e.target.value)}
         type="password"
 				required/>
-
-			{isSentRequest ? showAlertMessage(registerStatus) : ''}
-
+      {isShowAlert ? <AlertMessage {...alertStatus}/> : ''}
 			<Button
+        disabled={isSentRequest}
 				variant="outlined"
 				type="submit"
 				className='register-form__btn'>

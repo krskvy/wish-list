@@ -11,20 +11,23 @@ export const authService = {
     return true;
   },
 
-  login: (user: User): boolean => {
+  login: (user: {username: string, password: string}): User | undefined=> {
     const users = JSON.parse(localStorage.getItem("users") || "[]") as User[];
-    return users.some(u => u.username === user.username && u.password === user.password);
+    return users.find(u => u.username === user.username && u.password === user.password);
   },
 
   getCurrentUser: (): User | null => {
     return JSON.parse(localStorage.getItem("currentUser") || "null");
   },
 
-  setCurrentUser: (user: User): void => {
-    localStorage.setItem("currentUser", JSON.stringify(user));
+  setCurrentUser: (userToSet: User): void => {
+    localStorage.setItem("currentUser", JSON.stringify(userToSet));
   },
 
   logout: (): void => {
     localStorage.removeItem("currentUser");
   },
+  getToken: (): string => {
+    return 'token';
+  }
 };

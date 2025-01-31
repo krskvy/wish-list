@@ -1,11 +1,14 @@
 import React from 'react';
-import { Menu, MenuItem, Divider, Button } from '@mui/material';
-import { authService } from '../services/authService';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import { Menu, MenuItem, Divider, IconButton } from '@mui/material';
+import { useAppDispatch } from "../store/store";  // Import the typed dispatch
+import { logoutUser } from "../store/slices/authSlice";
+import { clearWishlist } from '../store/slices/wishlistSlice';
 
 const UserMenu: React.FC = () => {
-
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const dispatch = useAppDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -13,19 +16,24 @@ const UserMenu: React.FC = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
-		authService.logout();
   };
+
+  const handleLogout = () => {
+    handleClose();
+    dispatch(logoutUser());
+    dispatch(clearWishlist());
+  }
 
 	return (
 		<div className="user-menu">
-			<Button
+			<IconButton
 					id="basic-button"
 					aria-controls={open ? 'basic-menu' : undefined}
 					aria-haspopup="true"
 					aria-expanded={open ? 'true' : undefined}
 					onClick={handleClick}>
-				User
-			</Button>
+				<AccountCircleRoundedIcon color="primary" fontSize="large"/>
+			</IconButton>
 			<Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -37,7 +45,7 @@ const UserMenu: React.FC = () => {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
 				<Divider/>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
 		</div>
 	);
