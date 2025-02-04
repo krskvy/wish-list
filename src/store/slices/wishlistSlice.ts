@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import { wishListService } from '../../services/wishListService';
 import { Wish } from '../../types';
 
@@ -30,7 +30,19 @@ const wishList = createSlice({
     },
     addWish: (state, action: PayloadAction<{ userId: string; wish: Wish }>) => {
       const { userId, wish } = action.payload;
-      state.allWishes.push(wish);
+      state.allWishes.unshift(wish);
+      wishListService.save(userId, state.allWishes);
+    },
+    addWishImage: (state, action: PayloadAction<{ userId: string; wishId: string; image: string }>) => {
+      const { userId, wishId, image } = action.payload;
+      const index = state.allWishes.findIndex(wish => wish.id === wishId);
+      state.allWishes[index].image = image;
+      wishListService.save(userId, state.allWishes);
+    },
+    removeWishImage: (state, action: PayloadAction<{ userId: string; wishId: string }>) => {
+      const { userId, wishId } = action.payload;
+      const index = state.allWishes.findIndex(wish => wish.id === wishId);
+      state.allWishes[index].image = '';
       wishListService.save(userId, state.allWishes);
     },
     removeWish: (state, action: PayloadAction<{ userId: string ; wishId: string }>) => {
@@ -55,5 +67,5 @@ const wishList = createSlice({
   },
 });
 
-export const { addWish, removeWish, clearWishlist, updateWishList} = wishList.actions;
+export const { addWish, removeWish, clearWishlist, updateWishList, addWishImage, removeWishImage} = wishList.actions;
 export default wishList.reducer;

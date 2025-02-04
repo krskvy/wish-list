@@ -23,4 +23,5 @@ export interface AuthState {
 export type Wish = {
   id: string;
   text: string;
+  image?: string;
 }

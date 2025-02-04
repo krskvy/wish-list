@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import WishListItem from './WishListItem';
 import { removeWish, updateWishList } from '../store/slices/wishlistSlice';
+import { selectUserId } from '../store/selectors/selectors';
 import { Wish } from '../types';
 
 import {
@@ -24,7 +25,7 @@ import {
 const WishList: React.FC = () => {
 	const dispatch = useDispatch();
 	const allWishes = useSelector((state: RootState) => state.wishList.allWishes);
-	const currentUser = useSelector((state: RootState) => state.auth.user);
+	const userId = useSelector((state: RootState) => selectUserId(state));
 
 	const sensors = useSensors(
     useSensor(PointerSensor),
@@ -39,14 +40,14 @@ const WishList: React.FC = () => {
 		const oldIndex = allWishes.findIndex((wish) => wish.id === active.id);
 		const newIndex = allWishes.findIndex((wish) => wish.id === over.id);
 		const newOrder = arrayMove(allWishes, oldIndex, newIndex);
-		if (currentUser?.id){
-			dispatch(updateWishList({ userId: currentUser?.id, wishes: newOrder }));
+		if(userId){
+			dispatch(updateWishList({ userId, wishes: newOrder }));
 		}
 	};
 
 	const removeItem = (wishId: string) => {
-		if(currentUser?.id) {
-			dispatch(removeWish({userId: currentUser.id, wishId}))
+		if(userId) {
+			dispatch(removeWish({userId, wishId}))
 		}
 	}
 	
@@ -56,12 +57,11 @@ const WishList: React.FC = () => {
 				<Stack
 					className="wishlist"
 					spacing={2}>
-						{Object.values(allWishes).flat().map((item: Wish, index: number) => (
+						{Object.values(allWishes).flat().map((wish: Wish, index: number) => (
 							<WishListItem
-								value={item.text}
-								key={item.id}
-								id={item.id}
-								remove={()=> removeItem(item.id)}/>
+								key={wish.id}
+								wishId={wish.id}
+								removeWish={()=> removeItem(wish.id)}/>
 						))}
 				</Stack>
 			</SortableContext>

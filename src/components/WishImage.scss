@@ -1,0 +1,21 @@
+.wish-image__container {
+  margin-top: 8px;
+  position: relative;
+  width: auto;
+  width: fit-content;  
+  height: fit-content;  
+
+  .wish-image {
+    max-width: 300px;  
+    max-height: 200px;
+    border-radius: 4px;
+  }
+
+  .wish-image__remove {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    padding: 2px;
+    background: rgba(255,255,255,0.35);
+  }
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Menu, MenuItem, Divider, IconButton } from '@mui/material';
 import { useAppDispatch } from "../store/store";  // Import the typed dispatch
 import { logoutUser } from "../store/slices/authSlice";
@@ -32,7 +32,7 @@ const UserMenu: React.FC = () => {
 					aria-haspopup="true"
 					aria-expanded={open ? 'true' : undefined}
 					onClick={handleClick}>
-				<AccountCircleRoundedIcon color="primary" fontSize="large"/>
+				<AccountCircleOutlinedIcon color="primary" fontSize="large"/>
 			</IconButton>
 			<Menu
         id="basic-menu"
