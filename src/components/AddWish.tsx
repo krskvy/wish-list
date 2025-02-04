@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './AddWish.scss'
 import { Button, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { addWish } from '../store/slices/wishlistSlice';
@@ -12,6 +13,7 @@ const AddWish: React.FC = () => {
 
 	const addWishtoList = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setInputValue('');
 		if(currentUser?.id) {
 			dispatch(addWish({userId: currentUser.id, wish: {id: uuidv4(), text: inputValue}}));
 		}

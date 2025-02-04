@@ -1,6 +1,7 @@
 .wishlist-item {
 	padding: 8px 16px;
-	display: flex;
+	display: grid;
 	justify-content: space-between;
 	align-items: center;
+	grid-template-columns: 1fr 40px;
 }

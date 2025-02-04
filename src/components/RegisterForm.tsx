@@ -32,7 +32,7 @@ const RegisterForm: React.FC = () => {
 	const [password, setPassword] = useState<string>('');
 	const [repeatPassword, setRepeatPassword] = useState<string>('');
 	const [isSentRequest, setIsSentRequest] = useState<boolean>(false);
-  const [isShowAlert, setIsShowAlert] = useState<boolean>(false);
+	const [isShowAlert, setIsShowAlert] = useState<boolean>(false);
 	const [alertStatus, setAlertStatus] = useState<alertStatusType>({severity: 'error', message: ''});
 	const navigate = useNavigate();
   const registrationStatus = useSelector((state: RootState) => state.auth.status);
@@ -58,7 +58,7 @@ const RegisterForm: React.FC = () => {
   useEffect(() => {
     console.log("Registration Status: ", registrationStatus);
 
-    if (registrationStatus === 'failed') {
+    if (registrationStatus === 'registration_failed') {
       setAlertStatus(ALERT_STATUS.invalid);
       setIsSentRequest(false);
       setIsShowAlert(true);

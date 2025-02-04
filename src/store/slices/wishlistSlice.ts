@@ -23,6 +23,11 @@ const wishList = createSlice({
   name: 'wishList',
   initialState,
   reducers: {
+    updateWishList: (state, action: PayloadAction<{ userId: string; wishes: Wish[] }>) => {
+      const { userId, wishes } = action.payload;
+      state.allWishes = wishes;
+      wishListService.save(userId, state.allWishes);
+    },
     addWish: (state, action: PayloadAction<{ userId: string; wish: Wish }>) => {
       const { userId, wish } = action.payload;
       state.allWishes.push(wish);
@@ -50,5 +55,5 @@ const wishList = createSlice({
   },
 });
 
-export const { addWish, removeWish, clearWishlist} = wishList.actions;
+export const { addWish, removeWish, clearWishlist, updateWishList} = wishList.actions;
 export default wishList.reducer;

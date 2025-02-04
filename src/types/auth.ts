@@ -17,7 +17,7 @@ export interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
-  status: "idle" | "loading" | "failed" | "logged_out" | "registered";
+  status: "idle" | "loading" | "failed" | "logged_out" | "registered" | "registration_failed" ;
 }
 
 export type Wish = {

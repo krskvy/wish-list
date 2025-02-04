@@ -23,7 +23,7 @@ const LoginForm: React.FC = () => {
 	const dispatch = useAppDispatch();
 
 	const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+	const [password, setPassword] = useState<string>('');
   const [isSentRequest, setIsSentRequest] = useState<boolean>(false);
 	const [alertStatus, setAlertStatus] = useState<alertStatusType>({severity: 'error', message: ''});
   const loginStatus = useSelector((state: RootState) => state.auth.status);

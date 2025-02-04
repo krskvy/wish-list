@@ -1,0 +1,10 @@
+.add-wish {
+  display: grid;
+  direction: row;
+  grid-template-columns: 1fr 120px;
+  margin-bottom: 16px;
+
+  .add-wish__input {
+    margin-right: 24px;
+  }
+}

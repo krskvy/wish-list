@@ -65,7 +65,7 @@ const authSlice = createSlice({
         state.status = "registered";
       })
       .addCase(registerUser.rejected, (state) => {
-        state.status = "failed";
+        state.status = "registration_failed";
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
