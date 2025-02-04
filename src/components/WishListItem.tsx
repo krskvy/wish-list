@@ -1,24 +1,29 @@
 import React from 'react';
-import { Card, IconButton } from '@mui/material';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
+import { Card, IconButton } from '@mui/material';
 import './WishListItem.scss';
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 const WishListItem: React.FC<{value: string, id: string, remove: () => void}> = ({value, id, remove}) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id });
 	
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
-		cursor: "grab",
-		
 	};
 
 	return (
-		<Card ref={setNodeRef} {...attributes} {...listeners} style={style} className="wishlist-item"	variant="outlined">
+		<Card ref={setNodeRef} 
+					style={style}
+					className={`wishlist-item ${isDragging ? "wishlist-item--dragging" : ""}`}
+					variant="outlined">
+			<div className="wishlist-item__dnd-indicator" {...attributes} {...listeners}>
+				<DragIndicatorIcon/>
+			</div>
 			<span className="wishlist-item__text">{ value }</span>
 			<div className="wishlist-item__btns">
 				<IconButton aria-label="delete" onClick={remove} color="error">

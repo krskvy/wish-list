@@ -1,7 +1,17 @@
 .wishlist-item {
-	padding: 8px 16px;
+	padding: 8px;
 	display: grid;
 	justify-content: space-between;
 	align-items: center;
-	grid-template-columns: 1fr 40px;
+	grid-template-columns: 30px 1fr 40px;
+
+	&--dragging {
+		box-shadow: -2px 3px 3px -2px rgba(0,0,0,0.25);
+	}
+
+	.wishlist-item__dnd-indicator {
+		display: grid;
+		align-items: center;
+		cursor: grab;
+	}
 }
