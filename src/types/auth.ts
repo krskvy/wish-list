@@ -20,6 +20,10 @@ export interface AuthState {
   status: "idle" | "loading" | "failed" | "logged_out" | "registered" | "registration_failed" ;
 }
 
+export interface WishListState {
+  allWishes: Wish[];
+}
+
 export type Wish = {
   id: string;
   text: string;

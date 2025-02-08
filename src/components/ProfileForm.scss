@@ -1,0 +1,8 @@
+.profile-form {
+  display: grid;
+  grid-template-rows: auto;
+  
+  hr {
+    margin-bottom: var(--default-bottom-margin);
+  }
+}

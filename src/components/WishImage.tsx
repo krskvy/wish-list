@@ -7,7 +7,7 @@ const WishImage: React.FC<{image: string, remove: () => void}> = ({image, remove
   return (<div className='wish-image__container'>
             <img 	src={image}
                   className="wish-image" 
-                  alt="Wish image" />
+                  alt="wish represenatation" />
             <IconButton aria-label="delete"	
                     className='wish-image__remove' 
                     onClick={remove}

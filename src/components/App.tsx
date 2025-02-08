@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import { loadWishlist } from "../store/slices/wishlistSlice";
+import UserProfilePage from './pages/UserProfilePage';
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,6 +28,7 @@ const App: React.FC = () => {
           <Route path="/" element={<DashboardPage/>}/>
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="/register" element={<RegisterPage/>}/>
+          <Route path="/profile" element={<UserProfilePage/>}/>
         </Routes>
       </div>
   );

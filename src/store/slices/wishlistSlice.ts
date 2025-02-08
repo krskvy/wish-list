@@ -1,13 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import { wishListService } from '../../services/wishListService';
-import { Wish } from '../../types';
+import { Wish, WishListState } from '../../types';
 
-
-interface WishList {
-  allWishes: Wish[];
-}
-
-const initialState: WishList = {
+const initialState: WishListState = {
   allWishes: [],
 };
 
